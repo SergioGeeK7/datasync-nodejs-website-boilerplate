@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+    <meta charset="utf-8">
+    <title>{{ entry.title }}</title>
+    <head> 
+        <link rel="stylesheet" type="text/css" href="../static/stylesheets/style.css">
+        <script src="../static/javascripts/script.js"></script>
+    </head>
+    <body>
+
+        
+        {% include "../partials/header.html" %}
+        
+        
+        {% block main_body %} {% endblock %}
+        
+        
+        {% include "../partials/footer.html" %}
+        
+    
+    </body>
+</html>
