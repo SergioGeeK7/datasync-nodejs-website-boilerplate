@@ -1,4 +1,3 @@
-var localStorage = require('localStorage')
-// import localStorage from 'localStorage';
+import localStorage from 'localStorage'
 
-module.exports = localStorage;
+export default localStorage

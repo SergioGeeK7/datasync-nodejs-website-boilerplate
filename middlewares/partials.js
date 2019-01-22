@@ -1,23 +1,25 @@
-var async = require('async')
-var Stack = require('../models/contentstack')
+import { Stack } from '../models/contentstack'
 
-module.exports = function (req, res, next) {
-		var contentTypes = ["header", "footer"]
-		async.map(
-			contentTypes,
-			function (contentType, callback) {
-				Stack.ContentType(contentType).Query()
-				.toJSON()
-				.find()
-				.spread(function (result){
-					callback(null, result[0])
-				})			
-			},
-			function (error, success) {
-				if (error) return next(error)
-				res.locals.partials = {}
-				contentTypes.forEach((key, result)=> res.locals.partials[key] = success[result])
-				next()
-			}
-		)	
+export const partials = (req, res, next) => {
+  const types = ['header', 'footer']
+  const bucket = []
+  types.forEach((type) => {
+    bucket.push(fetchEntries(type))
+  })
+  return Promise.all(bucket).then((output) => {
+    bucket.forEach((type, index) => {
+      res.locals.partials[type] = output[index]
+    })
+    return next()
+  })
+}
+
+const fetchEntries = (uid) => {
+  return new Promise((resolve, reject) => {
+    return Stack.ContentType(uid).Query()
+      .toJSON()
+      .find()
+      .then(resolve)
+      .catch(reject)
+  })
 }

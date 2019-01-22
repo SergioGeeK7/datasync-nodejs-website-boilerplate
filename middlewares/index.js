@@ -1,6 +1,6 @@
-var express = require('express')
-var app = express()
+const express = require('express')
+const app = express()
 
 app.use('*', require('./partials'))
 
-module.exports = app
+export { app }

@@ -1,77 +1,81 @@
-var cache = require('./../cache')
-// import * as cache from './../cache';
+import * as cache from '../cache'
 
-let localStorage = {};
+const localStorage = {}
 
 localStorage.get = function (key, callback) {
-    try {
-        callback(null, cache.get(key));
-    } catch(e) {
-        callback(e);
-    }
-};
+  try {
+    return callback(null, cache.get(key))
+  } catch (e) {
+    return callback(e)
+  }
+}
 
 localStorage.set = function (key, value, callback) {
-    try {
-        if(key && value) cache.set(key, value);
-        callback();
-    } catch(e) {
-        callback(e);
+  try {
+    if (key && value) {
+      cache.set(key, value)
     }
-};
+    return callback()
+  } catch (e) {
+    return callback(e)
+  }
+}
 
-function clearValuesForKey(keyArray, append) {
-    if(!append && keyArray && keyArray.length) keyArray.push('');
-    let _key,
-        keys = cache.getKeys(),
-        storage = cache.getStorage();
-    if(!keyArray || !keyArray.length) {
-        for(let i = 0, _i = keys.length; i < _i; i++) {
-            delete storage[keys[i]];
-        }
-    } else {
-        _key = keyArray.join('.');
-        for(let i = 0, _i = keys.length; i < _i; i++) {
-            if(keys[i] && keys[i].indexOf(_key) === 0) delete storage[keys[i]];
-        }
+function clearValuesForKey (keyArray, append) {
+  if (!append && keyArray && keyArray.length) keyArray.push('')
+  const keys = cache.getKeys()
+  let storage = cache.getStorage()
+  if (!keyArray || !keyArray.length) {
+    keys.forEach((key) => {
+      delete storage[key]
+    })
+  } else {
+    const _key = keyArray.join('.')
+    for (let i = 0, _i = keys.length; i < _i; i++) {
+      if (keys[i] && keys[i].indexOf(_key) === 0) delete storage[keys[i]]
     }
+  }
 }
 
 localStorage.clearByContentType = function () {
-    try {
-        if(arguments.length === 2 || arguments.length === 3) {
-            let args = Array.prototype.slice.call(arguments);
-            let callback = args.splice(-1, 1).pop();
-            let valueArray = [];
-            valueArray.push.apply(valueArray, args);
-            clearValuesForKey(valueArray);
-            callback();
-        }
-    } catch(e) {
-        callback(e);
+  try {
+    if (arguments.length === 2 || arguments.length === 3) {
+      let args = Array.prototype.slice.call(arguments)
+      let callback = args.splice(-1, 1).pop()
+      let valueArray = []
+      valueArray.push.apply(valueArray, args)
+      clearValuesForKey(valueArray)
+      return callback()
     }
+  } catch (e) {
+    return callback(e)
+  }
 }
 
 localStorage.clearByQuery = function (query, callback) {
-    try {
-        let keys = cache.getKeys(),
-            storage = cache.getStorage();
-        for(let i = 0, _i = keys.length; i < _i; i++) {
-            if(keys[i] && ~keys[i].indexOf(query)) delete storage[keys[i]];
-        }
-        callback();
-    } catch(e) {
-        callback(e);
+  try {
+    const keys = cache.getKeys()
+    let storage = cache.getStorage()
+    for (let i = 0, _i = keys.length; i < _i; i++) {
+      if (keys[i] && ~keys[i].indexOf(query)) {
+        delete storage[keys[i]]
+      }
     }
+    return callback()
+  } catch (e) {
+    return callback(e)
+  }
 }
 
 localStorage.clearAll = function (callback) {
-    try {
-        clearValuesForKey();
-        callback();
-    } catch(e) {
-        callback(e);
-    }
+  try {
+    clearValuesForKey()
+    return callback()
+  } catch (e) {
+    return callback(e)
+  }
 }
 
-module.exports = localStorage;
+export {
+  localStorage
+}

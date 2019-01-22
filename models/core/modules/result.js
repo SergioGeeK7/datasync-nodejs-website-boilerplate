@@ -1,5 +1,4 @@
-var Utils = require('../lib/utils')
-// import * as Utils  from '../lib/utils'
+import * as Utils from '../lib/utils'
 
 /**
  * @summary Creates an instance of `Result`.
@@ -20,88 +19,88 @@ var Utils = require('../lib/utils')
  * @returns {Result}
  */
 class Result {
-    constructor(object){
-        if(object) {
-            this.object = function() {
-                return object;
-            }
-        }
-        return this;
+  constructor(object) {
+    if (object) {
+      this.object = function () {
+        return object
+      }
     }
+    return this
+  }
 
 
-    /**
-     * @method toJSON
-     * @description Converts `Result` to plain javascript object.
-     * @example
-     * blogEntry.then(function (result) {
-     *      result = result.toJSON()
-     * },function (error) {
-     *      // error function
-     * })
-     * @example
-     * assetQuery.then(function (result) {
-     *      result = result.toJSON()
-     * },function (error) {
-     *      // error function
-     * })
-     * @returns {object}
-     */
-    toJSON() {
-        return (this.object()) ? Utils.mergeDeep(JSON.parse(JSON.stringify({})), this.object()) : null;
+  /**
+   * @method toJSON
+   * @description Converts `Result` to plain javascript object.
+   * @example
+   * blogEntry.then(function (result) {
+   *      result = result.toJSON()
+   * },function (error) {
+   *      // error function
+   * })
+   * @example
+   * assetQuery.then(function (result) {
+   *      result = result.toJSON()
+   * },function (error) {
+   *      // error function
+   * })
+   * @returns {object}
+   */
+  toJSON() {
+    return (this.object()) ? Utils.mergeDeep(JSON.parse(JSON.stringify({})), this.object()) : null
+  }
+
+  /**
+   * @method get
+   * @description Retrieve details of a field based on the UID provided
+   * @param field_uid uid of the field
+   * @example
+   * blogEntry.then(function (result) {
+   *      let value = result.get(field_uid)
+   * },function (error) {
+   *      // error function
+   * })
+   * @example
+   * assetQuery.then(function (result) {
+   *      let value = result.get(field_uid)
+   * },function (error) {
+   *      // error function
+   * })
+   * @returns {Object}
+   */
+  get(key) {
+    if (this.object() && key) {
+      let fields = key.split('.')
+      let value = fields.reduce(function (prev, field) {
+        return prev[field]
+      }, this.object())
+      return value
     }
+    return
+  }
 
-   /**
-     * @method get
-     * @description Retrieve details of a field based on the UID provided
-     * @param field_uid uid of the field
-     * @example
-     * blogEntry.then(function (result) {
-     *      let value = result.get(field_uid)
-     * },function (error) {
-     *      // error function
-     * })
-     * @example
-     * assetQuery.then(function (result) {
-     *      let value = result.get(field_uid)
-     * },function (error) {
-     *      // error function
-     * })
-     * @returns {Object}
-     */
-    get(key){
-        if(this.object() && key) {
-            let fields = key.split('.');
-            let value = fields.reduce(function(prev, field) {
-                return prev[field];
-            }, this.object());
-            return value;
-        }
-        return ;
+  /**
+   * @method getDownloadUrl
+   * @description Retrieves the download URL based on the disposition value.
+   * @param {String} string - disposition value
+   * @example
+   * assetQuery.then(function (result) {
+   *      let value = result.getDownloadUrl(disposition_value)
+   * },function (error) {
+   *      // error function
+   * })
+   * @returns {Object}
+   */
+  getDownloadUrl(disposition) {
+    if (this.object()) {
+      let url = (this.object().url) ? this.object().url : null,
+        _disposition = (disposition && typeof disposition === 'string') ? disposition : 'attachment'
+      return (url) ? url + '?disposition=' + _disposition : null
     }
-
-     /**
-     * @method getDownloadUrl
-     * @description Retrieves the download URL based on the disposition value.
-     * @param {String} string - disposition value
-     * @example
-     * assetQuery.then(function (result) {
-     *      let value = result.getDownloadUrl(disposition_value)
-     * },function (error) {
-     *      // error function
-     * })
-     * @returns {Object}
-     */
-     getDownloadUrl(disposition) {
-        if (this.object()) {
-            let url = (this.object().url) ? this.object().url : null,
-                _disposition = (disposition && typeof disposition === 'string') ? disposition: 'attachment';
-            return (url) ? url + '?disposition=' + _disposition : null;    
-        }
-     }    
+  }
 
 }
 
-module.exports = function(object) {
-    return new Result(object);
-};
+module.exports = function (object) {
+  return new Result(object)
+}
