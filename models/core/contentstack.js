@@ -1,14 +1,14 @@
-var Stack = require('./stack')
-var CacheProvider = require('./cache-provider/index')
+import Stack from './stack'
+import CacheProvider from './cache-provider/index'
 
 /**
  * @method Contentstack
  * @description Creates an instance of `Contentstack`.
  * @api public
  */
-class Contentstack {
+export class Contentstack {
 
-	constructor() {
+	constructor(){
 		/**
 		 * @constant CachePolicy
 		 * @description CachePolicy contains different cache policies constants.
@@ -19,7 +19,7 @@ class Contentstack {
 		 * Contentstack.CachePolicy.NETWORK_ELSE_CACHE
 		 * Contentstack.CachePolicy.CACHE_THEN_NETWORK
 		 */
-		this.CachePolicy = CacheProvider.policies;
+		this.CachePolicy = CacheProvider.policies
 	}
 
 	/**
@@ -27,19 +27,19 @@ class Contentstack {
 	 * @description Initialize an instance of ‘Stack’
 	 * @api public
 	 * @example
-	 *var Stack = Contentstack.Stack('api_key', 'delivery_token', 'environment');
+	 *var Stack = Contentstack.Stack('api_key', 'delivery_token', 'environment')
                  OR
 	 *var Stack = Contentstack.Stack({
 	 *    'api_key':'stack_api_key',
 	 *   'access_token':'stack_delivery_token',
 	 *    'environment':'environment_name'
-	 * });
+	 * })
 	 *
 	 * @returns {Stack}
 	 */
-	Stack(url, dbName) {
-		return new Stack(url, dbName)
+	Stack(...stack_arguments){
+		return new Stack(...stack_arguments)
 	}
 }
 
-module.exports = new Contentstack()
+export const contentstack = new Contentstack()
